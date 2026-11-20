@@ -58,4 +58,3 @@ cancelWeak (WeakAsync wt w) = do
     -- See: https://github.com/simonmar/async/issues/14
     tryAgain f = f `catch` \BlockedIndefinitelyOnSTM -> f
 
-
