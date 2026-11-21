@@ -1,8 +1,11 @@
 -- | An abbreviated version of System.Timeout that uses weak references
 module System.Timeout.Weak (timeout) where
 
+#if !defined(mingw32_HOST_OS) && !defined(javascript_HOST_ARCH)
 import Control.Monad
 import GHC.Event (getSystemTimerManager, registerTimeout, unregisterTimeout)
+#endif
+
 import Control.Concurrent
 import Control.Exception (Exception(..), handleJust, bracket,
                           uninterruptibleMask_,
