@@ -51,6 +51,7 @@ library
   other-modules:
     Control.Concurrent.Async
     Control.Concurrent.Async.Weak
+    System.Timeout.Weak
     Test.Tasty.Parallel
     Test.Tasty.Core
     Test.Tasty.Options.Core

@@ -37,7 +37,7 @@ import Data.Traversable (mapAccumM)
 #ifdef MIN_VERSION_unbounded_delays
 import Control.Concurrent.Timeout (timeout)
 #else
-import System.Timeout (timeout)
+import System.Timeout.Weak (timeout)
 #endif
 
 import Test.Tasty.Core

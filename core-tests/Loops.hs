@@ -4,7 +4,6 @@ module Loops (testLoops) where
 
 import Control.Concurrent (MVar, newEmptyMVar, rtsSupportsBoundThreads, takeMVar)
 import Control.Exception
-import System.Timeout (timeout)
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.Runners
@@ -33,15 +32,13 @@ testLoops = testGroup "Run if threading is enabled" $
 
 testLoopDetection :: TestTree
 testLoopDetection = testCase "Loop and deadlock detection" $ do
-  res <- timeout (10^(6 :: Int)) $
-    launchTestTree mempty loopTree $ \smap -> do
-      rs <- runSMap smap
-      return $ const $ return rs
+  res <- launchTestTree mempty (localOption (mkTimeout (10^(6 :: Int))) loopTree) $ \smap -> do
+    rs <- runSMap smap
+    return $ const $ return rs
   case res of
-    Nothing -> assertFailure "timed out: loops/deadlocks were not detected"
-    Just [loopR, mvarR] -> do
+    [loopR, mvarR] -> do
       assertBool ("expected <<loop>>, got: " ++ resultDescription loopR)
         (threw (\NonTermination -> True) loopR)
       assertBool ("expected BlockedIndefinitelyOnMVar, got: " ++ resultDescription mvarR)
         (threw (\BlockedIndefinitelyOnMVar -> True) mvarR)
-    Just rs -> assertFailure ("expected 2 results, got " ++ show (length rs))
+    rs -> assertFailure ("expected 2 results, got " ++ show (length rs))
