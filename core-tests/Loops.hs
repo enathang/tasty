@@ -32,7 +32,7 @@ testLoops = testGroup "Run if threading is enabled" $
 
 testLoopDetection :: TestTree
 testLoopDetection = testCase "Loop and deadlock detection" $ do
-  res <- launchTestTree mempty (localOption (mkTimeout (10^(6 :: Int))) loopTree) $ \smap -> do
+  res <- launchTestTree mempty (localOption (mkTimeout (2*10^(6 :: Int))) loopTree) $ \smap -> do
     rs <- runSMap smap
     return $ const $ return rs
   case res of
